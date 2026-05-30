@@ -16,7 +16,9 @@ Site vitrine pour l’atelier **Ondila Bois & Design**, spécialisé dans la con
 ---
 
 ## 🖼️ Aperçu du site
-![Capture d’écran](public/images/portfolio.jpg)
+
+![Capture d’écran du site](public/images/screenshot.png)
+
 
 ---
 
