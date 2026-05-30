@@ -16,9 +16,7 @@ Site vitrine pour l’atelier **Ondila Bois & Design**, spécialisé dans la con
 ---
 
 ## 🖼️ Aperçu du site
-
 ![Capture d’écran du site](public/images/screenshot.png)
-
 
 ---
 
@@ -32,4 +30,12 @@ Site vitrine pour l’atelier **Ondila Bois & Design**, spécialisé dans la con
 
 ## 📞 Contact
 - Email : contact@ondilaboisdesign.com  
-- Téléphone : +237 6XX XX XX XX
+- Téléphone : +237 6XX XX XX XX  
+
+---
+
+## 📜 Licence
+Ce projet est distribué sous la **Licence MIT**.  
+Vous êtes libre d’utiliser, copier, modifier et distribuer ce projet, à condition de conserver la mention du copyright :  
+
+Copyright (c) 2026 Dilaneonanina 
