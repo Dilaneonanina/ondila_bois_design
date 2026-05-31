@@ -2,19 +2,26 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const nodemailer = require("nodemailer");
+const compression = require("compression");
 
 const app = express();
 
-// Servir les fichiers statiques (images, CSS, JS, HTML)
-app.use(express.static("public"));
+// Middleware
+app.use(compression()); // accélère le chargement
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Config Nodemailer avec variables Render
+// Servir les fichiers statiques avec cache
+app.use(express.static(path.join(__dirname, "public"), {
+  maxAge: "1d"
+}));
+
+// Nodemailer config
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
+    user: process.env.EMAIL_USER,   // défini dans Render
+    pass: process.env.EMAIL_PASS    // mot de passe d’application Gmail
   }
 });
 
@@ -49,7 +56,7 @@ app.get("/api/portfolio", (req, res) => {
     const dir = path.join(__dirname, "public/images/meubles", cat);
     if (fs.existsSync(dir)) {
       const files = fs.readdirSync(dir)
-        .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file));
+        .filter(file => /\.(jpg|jpeg|png|gif|webp)$/i.test(file));
       data[cat] = files;
     } else {
       data[cat] = [];
@@ -70,4 +77,4 @@ app.get("/api/extensions", (req, res) => {
 
 // ⚠️ Render impose process.env.PORT
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Serveur lancé sur http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Serveur lancé sur le port ${PORT}`));
