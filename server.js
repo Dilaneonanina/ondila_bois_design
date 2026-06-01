@@ -2,26 +2,18 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const nodemailer = require("nodemailer");
-const compression = require("compression");
+require("dotenv").config(); // ✅ charge les variables depuis .env
 
 const app = express();
-
-// Middleware
-app.use(compression()); // accélère le chargement
+app.use(express.static("public"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// Servir les fichiers statiques avec cache
-app.use(express.static(path.join(__dirname, "public"), {
-  maxAge: "1d"
-}));
-
-// Nodemailer config
+// Configurer Nodemailer avec variables .env
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER,   // défini dans Render
-    pass: process.env.EMAIL_PASS    // mot de passe d’application Gmail
+    user: process.env.EMAIL_USER, // ✅ ton adresse Gmail
+    pass: process.env.EMAIL_PASS  // ✅ ton mot de passe d’application
   }
 });
 
@@ -31,7 +23,7 @@ app.post("/api/contact", (req, res) => {
 
   const mailOptions = {
     from: email,
-    to: process.env.EMAIL_USER,
+    to: process.env.EMAIL_USER, // ✅ tu reçois les messages sur ton adresse
     subject: `Nouveau message de ${name}`,
     text: `Nom: ${name}\nEmail: ${email}\nMessage:\n${message}`
   };
@@ -47,7 +39,7 @@ app.post("/api/contact", (req, res) => {
   });
 });
 
-// Route portfolio (images)
+// Route portfolio
 app.get("/api/portfolio", (req, res) => {
   const categories = ["tables", "armoires", "chaises"];
   const data = {};
@@ -56,7 +48,7 @@ app.get("/api/portfolio", (req, res) => {
     const dir = path.join(__dirname, "public/images/meubles", cat);
     if (fs.existsSync(dir)) {
       const files = fs.readdirSync(dir)
-        .filter(file => /\.(jpg|jpeg|png|gif|webp)$/i.test(file));
+        .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file));
       data[cat] = files;
     } else {
       data[cat] = [];
@@ -66,7 +58,7 @@ app.get("/api/portfolio", (req, res) => {
   res.json(data);
 });
 
-// Route extensions SketchUp
+// Route extensions
 app.get("/api/extensions", (req, res) => {
   const dir = path.join(__dirname, "public/extensions");
   const files = fs.existsSync(dir)
@@ -75,6 +67,4 @@ app.get("/api/extensions", (req, res) => {
   res.json(files);
 });
 
-// ⚠️ Render impose process.env.PORT
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Serveur lancé sur le port ${PORT}`));
+app.listen(3000, () => console.log("🚀 Serveur lancé sur http://localhost:3000"));
